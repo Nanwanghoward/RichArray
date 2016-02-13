@@ -1,0 +1,557 @@
+# java3
+RichArray
+// HW11 Nan Wang
+package richArray;
+
+import java.util.Arrays;
+
+public class RichArray {
+	/**
+	 * a two dimension richArray that can't be manipulated by outside classes.
+	 */
+	private int[][] richArray;
+	/**
+	 * Creates a RichArray containing a copy of the given array.
+	 * if the array is null,throw a NullPointerException.
+	 * if it is a zero length array, then the richArray will be zero_length.
+	 * 
+	 * @param array given two dimension array.
+	 * @throws NullPointerException throw a NullPointerException if the array is null.
+	 */
+	public RichArray(int[][] array) throws NullPointerException{
+		if (array == null) {
+			throw new NullPointerException("The input array is null");
+		}else if (array.length == 0 ) {
+				richArray = new int[0][0];
+			} else {
+				richArray = new int[array.length][];
+				for (int i = 0; i < array.length; i++) {
+						richArray[i] = Arrays.copyOf(array[i], array[i].length);
+					}
+				}
+		}
+		
+		/**
+		 * Creates a RichArray containing the given array. 
+		 * Internally, every RichArray object holds a two-dimensional array. 
+		 * Copy the given one-dimensional array of N locations into a 1xN two-dimensional array.
+	     * if the array is null,throw a NullPointerException.
+	     * if it is a zero length array, then the richArray will be zero_length.
+		 *
+		 * @param array given two dimension array.
+		 * @throws NullPointerException throw a NullPointerException if the array is null.
+		 */
+		public RichArray(int[] array) throws NullPointerException{  
+			if (array == null) {
+				throw new NullPointerException("The input array is null");
+			} else if (array.length == 0) {
+				richArray = new int[0][0];
+			} else {
+				richArray = new int[1][array.length];
+				for (int i = 0; i < array.length; i++) {
+					richArray[0][i] = array[i];
+				}
+			}
+		}
+		
+		/**
+		 * Creates an RichArray of length integers,
+		 * fills it with the numbers 1 to length.
+		 * if the length is negative,throw a IndexOutOfBoundsException.
+		 * 
+		 * @param length the length of the richArray
+		 * @throws IndexOutOfBoundsException if the length is negative,throw a IndexOutOfBoundsException.
+		 */
+		public RichArray(int length) throws IndexOutOfBoundsException{  
+			if (length < 0) {
+				throw new IndexOutOfBoundsException("The length is less than zero.");
+			} else if (length == 0) {
+				richArray = new int[0][0];
+			} else {
+				int[] temp = new int[length];
+				for (int i = 0; i < length; i++)
+					temp[i] = i + 1;
+				richArray = new int[1][];
+				richArray[0] = temp;
+			}
+		}
+		
+		/**
+		 * Create a RichArray of rows rows and columns columns,
+		 * fills it with the integers 1 to rows*columns, 
+		 * left to right, top to bottom.
+		 * 
+		 * @param rows the rows of the richArray.
+		 * @param columns the columns of the richArray.
+		 * @throws IndexOutOfBoundsException if the rows or columns is negative,throw a IndexOutOfBoundsException.
+		 */
+		public RichArray(int rows, int columns) throws IndexOutOfBoundsException{  
+			if (rows < 0 || columns < 0) {
+				throw new IndexOutOfBoundsException("The length is less than zero");
+			} else if (rows == 0 ) {
+				richArray = new int[0][0];
+			} else {
+				richArray = new int[rows][columns];
+				for (int i = 0; i < rows; i++) {
+					for (int j = 0; j < columns; j++) {
+						richArray[i][j] = i * columns + j + 1;
+					}
+				}
+			}
+		}
+	
+	/**
+	 * Returns a new RichArray whose values are 
+	 * in the reverse order of those in the given RichArray.
+	 * 
+	 * @return the reverse of the richArray.
+	 */
+	public RichArray reverse(){
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(richArray);
+		}
+		else if(richArray[0].length==0){
+			return new RichArray(richArray);}
+		else{
+		for(int i = 0;i<richArray.length;i++){
+			for (int j =0;j<richArray[0].length/2;j++){
+				int temp = richArray[i][j];
+				richArray[i][j]=richArray[i][richArray[0].length-j-1];
+				richArray[i][richArray[0].length-j-1]=temp;
+			}
+		}
+		return new RichArray(richArray);}
+	}
+	
+	/**
+	 * Returns a new RichArray which is "rotated" a quarter-turn clockwise.
+	 * 
+	 * @return the rotateRight of the richArray.
+	 */
+	public RichArray rotateRight(){
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(richArray);
+		}
+		else if(richArray[0].length==0){
+			return new RichArray(richArray);}
+		else{
+		int[][] newrichArray = new int[richArray[0].length][richArray.length];
+		for(int i = 0;i<richArray.length;i++){
+			for(int j=0;j<richArray[0].length;j++){
+				newrichArray[j][richArray.length-i-1]=richArray[i][j];	
+			}
+		}
+		return new RichArray(newrichArray);}
+	}
+	
+	/**
+	 * Returns a new RichArray which is "rotated" a quarter-turn counterclockwise.
+	 * 
+	 * @return the rotateLeft of the richArray.
+	 */
+	public RichArray rotateLeft(){
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(richArray);
+		}else if(richArray[0].length==0){
+			return new RichArray(richArray);}
+		else{
+		int[][] newrichArray = new int[richArray[0].length][richArray.length];
+		for(int i = 0;i<richArray.length;i++){
+			for(int j=0;j<richArray[0].length;j++){
+				newrichArray[richArray[0].length-j-1][i]=richArray[i][j];	
+			}
+		}
+		return new RichArray(newrichArray);}
+	}
+	
+	/**
+	 * Transposes a RichArray of m rows and n columns to form a RichArray of n rows and m columns. 
+	 * The value in location [i][j] of the RichArray become 
+	 * the value in location [j][i] of the new RichArray.
+	 * 
+	 * @return the transpose of the richArray.
+	 */
+	public RichArray transpose(){
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(richArray);
+		}
+		else if(richArray[0].length==0){
+			return new RichArray(richArray);}
+		else{
+		int[][] newrichArray = new int[richArray[0].length][richArray.length];
+		for(int i = 0;i<richArray.length;i++){
+			for(int j=0;j<richArray[0].length;j++){
+				newrichArray[j][i]=richArray[i][j];	
+			}
+		}
+		return new RichArray(newrichArray);}
+	}
+	
+	/**
+	 * Takes a one-dimensional RichArray of m × n numbers 
+	 * and returns a two-dimensional RichArray of m rows and n columns. 
+	 * The first n numbers of the given RichArray are copied into the first row 
+	 * of the new RichArray, the second n numbers into the second row, and so on. 
+	 * This method throws an IllegalArgumentException if the length of the input 
+	 * RichArray is not evenly divisible by n.
+	 * 
+	 * @param n the column count.
+	 * @return the ravel of the richArray.
+	 */
+	public RichArray ravel(int n) {
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(richArray);
+		}
+		if(richArray[0].length==0){
+			return new RichArray(richArray);}
+		int size = richArray[0].length;
+		int[][] newrichArray = new int[size/n][n];
+		if((size%n)!=0){
+			throw new IllegalArgumentException("the length of the input RichArray is not evenly divisible by n");
+		}else if(richArray.length> 1){
+			throw new IllegalArgumentException("the original RichArray is not one-dimensional");
+		}else{
+			int rows = size/n;
+			for(int i=0;i<rows;i++){
+				for(int j = 0;j<n;j++){
+					newrichArray[i][j]=richArray[0][i*n+j];
+				}
+			}
+		}
+	return new RichArray(newrichArray);	}
+	
+	/**
+	 * Takes a m by n two dimensional RichArray and returns a 
+	 * one-dimensional RichArray of size m × n containing the 
+	 * same numbers. The first n numbers of the new RichArray 
+	 * are copied from the first row of the given RichArray, 
+	 * the second n numbers from the second row, and so on.
+	 * 
+	 * @return the unravel of the richArray.
+	 */
+	public RichArray unravel(){
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(richArray);
+		}else if(richArray[0].length==0){
+			return new RichArray(richArray);
+		}else{
+		int m = richArray.length;
+		int n = richArray[0].length;
+		int[] newrichArray = new int[m*n];
+		for(int i =0;i<m;i++){
+			for(int j = 0;j<n;j++){
+				newrichArray[i*n+j]=richArray[i][j];
+			}	
+		}
+	return new RichArray(newrichArray);}	
+	}
+   
+	/**
+	 *Takes a two-dimensional array of r rows and c columns 
+	 *and reshapes it to have n columns by (r*c)/n rows. 
+	 *This method throws an IllegalArgumentException if 
+	 *r*c is not evenly divisible by n.
+	 *
+	 * @param n the column count.
+	 * @return the reshape of the richArray.
+	 */
+	public RichArray reshape(int n){
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(richArray);
+		}
+		if(richArray[0].length==0){
+			return new RichArray(richArray);}
+		int r = richArray.length;
+		int c = richArray[0].length;
+		int[][] newrichArray = new int[(r*c)/n][n];
+		if((r*c)%n!=0){
+			throw new IllegalArgumentException("r*c is not evenly divisible by n");
+		}else{
+			RichArray rich= new RichArray(richArray);
+			for(int i=0;i<(r*c)/n;i++){
+				for(int j = 0;j<n;j++){
+					newrichArray[i][j]=rich.unravel().richArray[0][i*n+j];
+				}
+			}
+	   }
+		return new RichArray(newrichArray);
+	}
+	
+	/**
+	 * Adjoins a RichArray with n rows and m1 columns to the 
+	 * parameter RichArray with n rows and m2 columns, forming 
+	 * a new RichArray with n rows and m1+m2 columns. This method 
+	 * throws an IllegalArgumentException if the input RichArrays 
+	 * do not have the same number of rows.
+	 * 
+	 * @param array the given joining array.
+	 * @return the combination of the richArray and array.
+	 */
+	public RichArray join(RichArray array){
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(array.richArray);
+		}
+		else if(richArray[0].length==0){
+			return new RichArray(array.richArray);}
+		int n=richArray.length;
+		int m1=richArray[0].length;
+		int m2 =array.richArray[0].length;
+		int[][] newrichArray = new int[n][m1+m2];
+		if(richArray.length!= array.richArray.length){
+			throw new IllegalArgumentException ("Two arrays with different rows can't be joined.");
+		}else{
+			for(int i=0;i<n;i++){
+				for(int j1 = 0;j1<m1;j1++){
+					newrichArray[i][j1]=richArray[i][j1];					
+				}
+				for(int j2=0;j2<m2;j2++){
+					newrichArray[i][j2+m1]=array.richArray[i][j2];
+				}
+			}
+	}
+		return new RichArray(newrichArray);
+	}
+	
+	/**
+	 * Forms a new RichArray with n rows and m1+m2 columns 
+	 * by putting the recipient RichArray with n1 rows and 
+	 * m columns on top of the parameter RichArray of n2 rows 
+	 * and m columns. This method throws an IllegalArgumentException
+	 *  if the input RichArrays do not have the same number of columns.
+	 * 
+	 * @param array the given stacking array.
+	 * @return the stack of richArray and the given array.
+	 */
+	public RichArray stack(RichArray array){
+		if (Arrays.deepEquals(richArray, new int[0][0])){
+			return new RichArray(richArray);
+		}
+		int n1=richArray.length;
+		int m=richArray[0].length;
+		int n2 =array.richArray.length;
+		int[][] newrichArray = new int[n1+n2][m];
+		if(m ==0 && array.richArray[0].length==0){
+			return new RichArray(new int[m+array.richArray[0].length][0]);
+		}
+		if(richArray[0].length!= array.richArray[0].length){
+			throw new IllegalArgumentException ("Two arrays with different columns can't be stacked.");
+		}else{
+			for(int i=0;i<m;i++){
+				for(int j1 = 0;j1<n1;j1++){
+					newrichArray[j1][i]=richArray[j1][i];					
+				}
+				for(int j2=0;j2<n2;j2++){
+					newrichArray[j2+n1][i]=array.richArray[j2][i];
+				}
+			}
+	  }
+	return new RichArray(newrichArray);
+	}
+	
+	
+/**
+ *Returns the number of rows in the RichArray.
+ * For a one-dimensional RichArray, this returns 1.
+ * 
+ * @return the number of rows of richArray.
+ */
+public int rowCount(){
+	return richArray.length;
+}
+/**
+ * Returns the number of columns in the RichArray. 
+ * For a one-dimensional RichArray, this is the 
+ * number of values in the RichArray.
+ * 
+ * @return the number of columns of richArray.
+ */
+public int columnCount(){
+	if (Arrays.deepEquals(richArray, new int[0][0])){
+		return 0;
+	}else{
+	return richArray[0].length;}
+}
+/**
+ * Returns a new RichArray containing values from 
+ * row firstRow to row lastRow, inclusive, of the recipient RichArray.
+ * 
+ * @param firstRow the begin index of the rows.
+ * @param lastRow the end index of the rows.
+ * @return the values between firstRow and lastRow.
+ */
+public RichArray rows(int firstRow, int lastRow){
+	if (Arrays.deepEquals(richArray, new int[0][0])){
+		return new RichArray(richArray);
+	}
+	if (firstRow < 0 || lastRow < 0 || firstRow > lastRow || lastRow >= richArray.length) {
+		throw new IndexOutOfBoundsException("The rows selected is illegal");
+		}else{
+	int[][] newrichArray = new int[lastRow-firstRow+1][richArray[0].length];
+    for(int i=0;i<newrichArray.length;i++){
+    	newrichArray[i]=richArray[firstRow+i];
+    }
+    return new RichArray(newrichArray);
+	}
+}
+/**
+ * Returns a new RichArray containing values from column firstColumn 
+ * to column lastColumn, inclusive, of the recipient RichArray.
+ * 
+ * @param firstColumn the begin index of the columns.
+ * @param lastColumn the end index of the columns.
+ * @return the values between firstColumn and lastColumn.
+ */
+public RichArray columns(int firstColumn, int lastColumn){
+	if (Arrays.deepEquals(richArray, new int[0][0])){
+		return new RichArray(richArray);
+	}
+	if (firstColumn < 0 || lastColumn < 0 || firstColumn > lastColumn || lastColumn >= richArray[0].length) {
+		throw new IndexOutOfBoundsException("The rows selected is illegal");}
+	else{
+	int[][] newrichArray = new int[richArray.length][lastColumn-firstColumn+1];
+	for(int i = 0;i<richArray.length;i++){
+		for(int j =0;j<newrichArray[0].length;j++){
+			newrichArray[i][j]=richArray[i][j+firstColumn];
+		}
+	}
+	return new RichArray(newrichArray);	
+	}
+}
+
+/**
+ * Returns a new RichArray containing values from 
+ * the given portion of the recipient RichArray.
+ * 
+ * @param firstRow the begin index of the rows.
+ * @param lastRow the end index of the rows.
+ * @param firstColumn the begin index of the columns.
+ * @param lastColumn the end index of the columns.
+ * @return the values between firstRow,lastRow,firstColumn,lastColumn.
+ */
+public RichArray slice(int firstRow, int lastRow, int firstColumn, int lastColumn){
+	if (Arrays.deepEquals(richArray, new int[0][0])){
+		return new RichArray(richArray);
+	}
+	RichArray rich = new RichArray(richArray);
+	int[][] newrichArray = rich.rows(firstRow, lastRow).columns(firstColumn, lastColumn).richArray;
+    return new RichArray(newrichArray);
+}
+/**
+ * Returns a new RichArray in which the parameter 
+ * array replaces the values of the recipient RichArray, 
+ * starting at the given row and column. This method throws 
+ * an IllegalArgumentException if the parameter RichArray 
+ * would go beyond the bounds of the recipient array.
+ * 
+ * @param array the given replacing array.
+ * @param row the begin index of rows.
+ * @param column the begin index of columns.
+ * @return a new RichArray in which the parameter 
+ * array replaces the values of the recipient RichArray, 
+ * starting at the given row and column.
+ */
+public RichArray replace(RichArray array, int row, int column){
+	if (Arrays.deepEquals(array.richArray, new int[0][0])){
+		return new RichArray(richArray);
+	}
+	if (array.richArray[0].length == 0){
+		return new RichArray(richArray);
+	}
+	int m = array.richArray.length;
+	int n = array.richArray[0].length;
+	int m1 = richArray.length;
+	int n1 = richArray[0].length;
+	if((m+row)>m1||(n+column)>n1){
+		throw new IllegalArgumentException ("parameter RichArray would go beyond the bounds of the recipient array.");		
+	}
+	else if(row < 0 || column < 0){
+		throw new IllegalArgumentException("The rows and columns are illegal");
+	}
+		else{
+		for(int i =0;i<m;i++){
+			for(int j = 0;j<n;j++){
+				richArray[row+i][column+j]=array.richArray[i][j];
+			}
+		}
+	}
+	return new RichArray(richArray);
+}
+
+/* (non-Javadoc)
+ * @see java.lang.Object#equals(java.lang.Object)
+ */
+@Override
+public boolean equals(Object o){
+	if(o instanceof RichArray){
+		RichArray that = (RichArray)o;
+		if(this.richArray.length == that.richArray.length){
+			if(this.richArray[0].length == that.richArray[0].length){
+				for(int i =0;i<richArray.length;i++){
+					for(int j =0;j<richArray[0].length;j++){
+						if(this.richArray[i][j]!= that.richArray[i][j]){
+							return false;
+						}
+					}
+				}
+			}else
+				return false;
+		}else return false;
+	return true;
+	}else
+		return false;
+}
+
+/* (non-Javadoc)
+ * @see java.lang.Object#hashCode()
+ */
+@Override
+public int hashCode(){ 
+	return richArray.hashCode();
+}
+
+/**
+ *Returns a one-dimensional array of the values in the 
+ *recipient RichArray. If the RichArray is two-dimensional, 
+ *it is first unraveled.
+ *
+ * @return the one dimension array.
+ */
+public int[] toArray1D(){
+	if (Arrays.deepEquals(richArray, new int[0][0])){
+		return new int[0];
+	}
+	return this.unravel().richArray[0];
+}
+
+/**
+ * Returns a copy of the two-dimensional array of the values 
+ * in the recipient RichArray. If the RichArray is one-dimensional, 
+ * the result will be an array containing, as its single element, 
+ * a one-dimensional array. 
+ * 
+ * @return the two dimension array.
+ */
+public int[][] toArray2D(){
+	int[][] newarray2D;
+	newarray2D = new RichArray(richArray).richArray;
+	return newarray2D;
+}
+/**
+ *Returns the integer at the given row and column.
+ * 
+ * @param row the index of row.
+ * @param column the index of column.
+ * @return the value at the given row and column. 
+ */
+public int at(int row, int column){
+	if(Arrays.deepEquals(this.richArray, new int[0][0])){
+		throw new IndexOutOfBoundsException("Sorry, the RichArray is empty.");
+	}else if(row < 0 || column < 0 || row >= richArray.length || column >= richArray[0].length){
+		throw new IndexOutOfBoundsException("Sorry, Index out of bounds");}
+		else{
+	return this.richArray[row][column];}
+}
+}
+                                        
+
+
