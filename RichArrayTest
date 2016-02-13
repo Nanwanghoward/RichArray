@@ -1,0 +1,250 @@
+# java3
+RichArray
+// HW11 Nan Wang
+package richArray;
+
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
+
+public class RichArrayTest {
+	
+	RichArray nan1;
+	RichArray nan2;
+	RichArray nan3;
+	RichArray nan4;
+	RichArray nan5;
+	RichArray nan6;
+	RichArray nan7;
+	RichArray nan8;
+	RichArray nan9;
+	RichArray nan10;
+	
+	int[] emptyoneD = new int[0];
+	int[][] emptytwoD = new int[0][0];
+	int[][] emptytwoD1 = new int[][] {{}};
+	int[] oneD = new int[] { 1, 2, 3, 4, 5 };
+	int[] oneD1 = new int[] {1,2,3,4,5,6,7,8,9,10,11,12};
+	int[][] twoD1 = new int[][] { { 1, 2, 3 },{ 4, 5, 6 } };
+    int[][] twoD2 = new int[][] {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
+    int[][] twoD3 = new int[][] {{1,2,3,4,5,6},{7,8,9,10,11,12}};
+    int[][] twoD4 = new int[][] {{10,20,30,40},{50,60,70,80}};
+    int[][] twoD5 =new int[][] {{1,2,3,4,5},{6,7,8,9,10},{11,12,13,14,15},{16,17,18,19,20}};
+	@Before
+	public void setUp(){
+		int[] emptyoneD = new int[0];
+		int[][] emptytwoD = new int[0][0];
+		nan1 = new RichArray(oneD);
+		nan2 = new RichArray(oneD1);
+		nan3 = new RichArray(twoD1);
+		nan4 = new RichArray(twoD2);
+		nan5 = new RichArray(twoD3);
+		nan6 = new RichArray(twoD4);
+		nan7 = new RichArray(twoD5);
+		nan8 = new RichArray(emptyoneD);
+		nan9 = new RichArray(emptytwoD);
+		nan10 = new RichArray(emptytwoD1);
+	}
+
+	@Rule
+
+    public  ExpectedException exception = ExpectedException.none();
+	
+	@Test
+	public void testreverse() {
+		 assertArrayEquals(nan1.reverse().toArray2D(),new int[][] {{5,4,3,2,1}});
+	     assertArrayEquals(nan3.reverse().toArray2D(),new int[][] {{3,2,1},{6,5,4}});
+	     assertArrayEquals(nan4.reverse().toArray2D(),new int[][] {{4,3,2,1},{8,7,6,5},{12,11,10,9}});
+	}
+	
+	@Test
+	public void testrotateRight(){
+		assertArrayEquals(nan4.rotateRight().toArray2D(),new int[][] {{9,5,1},{10,6,2},{11,7,3},{12,8,4}});
+		assertArrayEquals(nan5.rotateRight().toArray2D(),new int[][] {{7,1},{8,2},{9,3},{10,4},{11,5},{12,6}});
+		assertArrayEquals(nan7.rotateRight().toArray2D(),new int[][] {{16,11,6,1},{17,12,7,2},{18,13,8,3},{19,14,9,4},{20,15,10,5}});
+	}
+	
+	@Test
+	public void testrotateLeft(){
+		assertArrayEquals(nan4.rotateLeft().toArray2D(),new int[][] {{4,8,12},{3,7,11},{2,6,10},{1,5,9}});
+	    assertArrayEquals(nan5.rotateLeft().toArray2D(),new int[][] {{6,12},{5,11},{4,10},{3,9},{2,8},{1,7}});
+	    assertArrayEquals(nan7.rotateLeft().toArray2D(),new int[][] {{5,10,15,20},{4,9,14,19},{3,8,13,18},{2,7,12,17},{1,6,11,16}});
+	}
+	
+	@Test
+	public void testtranspose(){
+		assertArrayEquals(nan4.transpose().toArray2D(),new int[][] {{1,5,9},{2,6,10},{3,7,11},{4,8,12}});
+	    assertArrayEquals(nan5.transpose().toArray2D(),new int[][] {{1,7},{2,8},{3,9},{4,10},{5,11},{6,12}});
+	    assertArrayEquals(nan7.transpose().toArray2D(),new int[][] {{1,6,11,16},{2,7,12,17},{3,8,13,18},{4,9,14,19},{5,10,15,20}});
+	}
+
+	/**
+	 * This method tests if an IllegalArgumentException is thrown when
+	 * the length of the input RichArray is not evenly divisible by n.
+	 */
+	@Test
+	public void testravel(){
+		exception.expect(IllegalArgumentException.class);
+		assertArrayEquals(nan2.ravel(4).toArray2D(),twoD2);
+		assertArrayEquals(nan1.ravel(1).toArray2D(),new int[][] {{1},{2},{3},{4},{5}});
+		nan2.ravel(5);
+		
+	}
+	
+	@Test
+	public void testunravel(){
+	   assertArrayEquals(nan4.unravel().toArray2D(),new int[][]{oneD1});   
+	   assertArrayEquals(nan6.unravel().toArray2D(),new int[][] {{10,20,30,40,50,60,70,80}});
+	
+	}
+	
+	/**
+	 * r rows and c columns
+	 * This method tests if an IllegalArgumentException is thrown when
+	 * r*c is not evenly divisible by n.
+	 */
+	@Test
+	public void testreshape(){
+		exception.expect(IllegalArgumentException.class);	
+	    assertArrayEquals(nan4.reshape(6).toArray2D(),twoD3);	
+	    assertArrayEquals(nan6.reshape(2).toArray2D(),new int[][]{{10,20},{30,40},{50,60},{70,80}});
+	    nan4.ravel(5);
+	}
+	
+	/**
+	 * This method tests if an IllegalArgumentException is thrown when
+	 * the input RichArrays do not have the same number of rows.
+	 */
+	@Test
+	public void testjoin(){
+		exception.expect(IllegalArgumentException.class);	
+	    assertArrayEquals(nan3.join(nan6).toArray2D(),new int[][] {{1,2,3,10,20,30,40},{4,5,6,50,60,70,80}});	
+	    assertArrayEquals(nan1.join(nan2).toArray2D(),new int[][] {{1,2,3,4,5,1,2,3,4,5,6,7,8,9,10,11,12}});
+	    nan4.ravel(5);
+	}
+	
+	/**
+	 * This method tests if an IllegalArgumentException is thrown when
+	 * the input RichArrays do not have the same number of columns.
+	 */
+	@Test
+	public void teststack(){
+		exception.expect(IllegalArgumentException.class);	
+	    assertArrayEquals(nan4.stack(nan6).toArray2D(),new int[][] {{1,2,3,4},{5,6,7,8},{9,10,11,12},{10,20,30,40},{50,60,70,80}});	
+	    assertArrayEquals(nan1.stack(new RichArray(new int[][]{{6,7,8,9,10}})).toArray2D(),new int[][] {{1,2,3,4,5},{6,7,8,9,10}});	    
+	    nan4.ravel(5);
+	}
+	
+	@Test
+	public void testrowCount(){
+		assertEquals(1,nan1.rowCount());
+		assertEquals(1,nan2.rowCount());
+		assertEquals(2,nan3.rowCount());
+		assertEquals(3,nan4.rowCount());
+		assertEquals(2,nan5.rowCount());
+		assertEquals(2,nan6.rowCount());
+		assertEquals(0,nan8.rowCount());
+		assertEquals(0,nan9.rowCount());
+		assertEquals(1,nan10.rowCount());
+	}
+	
+	@Test
+	public void testcolumnCount(){
+		assertEquals(5,nan1.columnCount());
+		assertEquals(12,nan2.columnCount());
+		assertEquals(3,nan3.columnCount());
+		assertEquals(4,nan4.columnCount());
+		assertEquals(6,nan5.columnCount());
+		assertEquals(4,nan6.columnCount());
+		assertEquals(0,nan8.columnCount());
+		assertEquals(0,nan9.columnCount());
+		assertEquals(0,nan10.columnCount());
+	}
+	
+	/**
+	 * This method tests if an IndexOutOfBoundsException is thrown when
+	 * the input row number is out of index.
+	 */
+	@Test
+	public void testrows(){
+		exception.expect(IndexOutOfBoundsException.class);
+		assertArrayEquals(nan4.rows(1,2).toArray2D(),new int[][] {{5,6,7,8},{9,10,11,12}});
+		assertArrayEquals(nan5.rows(1,1).toArray2D(),new int[][] {{7,8,9,10,11,12}});
+	    nan4.rows(1,10);
+	}
+	
+	/**
+	 * This method tests if an IndexOutOfBoundsException is thrown when
+	 * the input column number is out of index.
+	 */
+	@Test
+	public void testcolumns(){
+		exception.expect(IndexOutOfBoundsException.class);
+		assertArrayEquals(nan4.columns(1,2).toArray2D(),new int[][] {{2,3},{6,7},{10,11}});
+		assertArrayEquals(nan1.columns(2,4).toArray2D(),new int[][] {{3,4,5}});
+		nan4.columns(1,10);
+	}
+	
+	@Test
+	public void testslice(){
+		assertArrayEquals(nan4.slice(1,2,2,3).toArray2D(),new int[][] {{7,8},{11,12}});
+		assertArrayEquals(nan5.slice(1,1,2,3).toArray2D(),new int[][] {{9,10}});
+		assertArrayEquals(nan1.slice(0,0,2,4).toArray2D(),new int[][] {{3,4,5}});
+		}
+	
+	/**
+	 * This method tests if an IllegalArgumentException is thrown when
+	 * the parameter RichArray would go beyond the bounds of the recipient array.
+	 */
+	@Test
+	public void testreplace(){
+		RichArray lir =  new RichArray(new int[][] {{55,66,77},{88,99,100}});		
+		int[][] newlir = new int[][] {{1,2,3,4,5},{6,7,55,66,77},{11,12,88,99,100},{16,17,18,19,20}};
+		assertArrayEquals(nan7.replace(lir,1,2).toArray2D(),newlir);
+		exception.expect(IllegalArgumentException.class);
+		nan7.replace(lir,1,3);
+	}
+	
+	@Test
+	public void testequals(){
+		RichArray o = new RichArray(twoD2);
+		String o1 = "You are not a instance.";
+		assertFalse(equals(o1));
+		assertFalse(nan2.equals(o));		
+		assertTrue(nan4.equals(o));
+		assertTrue(nan1.equals(new RichArray(oneD)));
+	}
+
+
+	@Test
+	public void testtoArray1D(){
+		assertArrayEquals(nan4.toArray1D(),nan2.toArray2D()[0]);
+	    assertArrayEquals(nan1.toArray1D(),oneD);
+	    assertArrayEquals(nan9.toArray1D(),emptyoneD);
+	    assertArrayEquals(nan10.toArray1D(),emptyoneD);
+	}
+	
+	
+	@Test
+	public void testtoArray2D(){
+		assertArrayEquals(nan4.toArray2D(),twoD2);
+	    assertArrayEquals(nan1.toArray2D(),new int[][] {oneD});
+	    assertArrayEquals(nan9.toArray2D(),emptytwoD);
+	    assertArrayEquals(nan10.toArray2D(),emptytwoD1);
+	}
+	
+	@Test
+	public void testat(){
+		exception.expect(IndexOutOfBoundsException.class);
+		assertEquals(nan4.at(0,0),1);
+		assertEquals(nan4.at(2,3),12);
+		assertEquals(nan1.at(0,4),5);
+		nan4.at(10,10);
+	}
+	
+}
+
+
